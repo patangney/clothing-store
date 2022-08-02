@@ -38,15 +38,15 @@ const HomePage = () => {
     },
   ]
   return (
-    <div className="categories-container">
+    <div className="container">
       {/* ---- destructure title, id ---- */}
       {categories.map(({title, id}) => (
-        <div key={id} className="category-container">
+        <div key={id} className="container__category">
           {/* ---- image ---- */}
           <div className="background-image">
 
           </div>
-          <div className="category-body-container">
+          <div className="container__body">
             <h2>{title}</h2>
             <p>Shop Now</p>
           </div>
