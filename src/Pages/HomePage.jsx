@@ -1,59 +1,36 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-
-
+import { DirectoryComponent } from '../components/ComponentIndex'
 
 const HomePage = () => {
-
   const categories = [
     {
       id: 1,
-      title: 'Hats',
-      imageUrl: 'https://i.ibb.co/cvpntL1/hats.png',
-      linkUrl: 'hats'
+      title: 'hats',
+      imageUrl: 'https://i.ibb.co/cvpntL1/hats.png'
     },
     {
       id: 2,
-      title: 'Jackets',
-      imageUrl: 'https://i.ibb.co/cvpntL1/jackets.png',
-      linkUrl: 'jackets'
+      title: 'jackets',
+      imageUrl: 'https://i.ibb.co/px2tCc3/jackets.png'
     },
     {
       id: 3,
-      title: 'Sneakers',
-      imageUrl: 'https://i.ibb.co/cvpntL1/sneakers.png',
-      linkUrl: 'sneakers'
+      title: 'sneakers',
+      imageUrl: 'https://i.ibb.co/0jqHpnp/sneakers.png'
     },
     {
       id: 4,
-      title: 'Womens',
-      imageUrl: 'https://i.ibb.co/cvpntL1/womens.png',
-      linkUrl: 'womens'
+      title: 'womens',
+      imageUrl: 'https://i.ibb.co/GCCdy8t/womens.png'
     },
     {
       id: 5,
-      title: 'Mens',
-      imageUrl: 'https://i.ibb.co/cvpntL1/hats.png',
-      linkUrl: 'mens'
-    },
+      title: 'mens',
+      imageUrl: 'https://i.ibb.co/R70vBrQ/men.png'
+    }
   ]
   return (
-    <div className="container">
-      {/* ---- destructure title, id ---- */}
-      {categories.map(({title, id}) => (
-        <div key={id} className="container__category">
-          {/* ---- image ---- */}
-          <div className="background-image">
-
-          </div>
-          <div className="container__body">
-            <h2>{title}</h2>
-            <p>Shop Now</p>
-          </div>
-        </div>
-      ))}
-          
-    </div>
+    <DirectoryComponent categories={categories}  />
   )
 }
 
