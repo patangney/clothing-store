@@ -5,6 +5,8 @@ import {
   getAuth,
   signInWithPopup,
   signInWithRedirect,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   GoogleAuthProvider
 } from 'firebase/auth'
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
@@ -27,41 +29,53 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 
-const provider = new GoogleAuthProvider() // GoogleAuthProvider is a class connected to Auth API | you can have multiple providers for different providers
-provider.setCustomParameters({ prompt: 'select_account' })
+const googleProvider = new GoogleAuthProvider() // GoogleAuthProvider is a class connected to Auth API | you can have multiple providers for different providers
+googleProvider.setCustomParameters({ prompt: 'select_account' })
 
 export const auth = getAuth()
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider)
 
 export const database = getFirestore()
 
-export const createUserDocFromAuth = async authUser => {
+export const createUserDocFromAuth = async (authUser, additionalInformation={displayName: 'username'}) => {
   //fn that will take data form auth service and store inside firestore
-  const userDocRef = doc(database, 'users', authUser.uid)
-  console.log(userDocRef)
-  const userSnapShot = await getDoc(userDocRef)
-  //create pattern if user does exist or not in firestore | .exists() returns true or false boolean
+  if (!authUser) {
+    return
+  } else {
+    const userDocRef = doc(database, 'users', authUser.uid)
+    console.log(userDocRef)
+    const userSnapShot = await getDoc(userDocRef)
+    //create pattern if user does exist or not in firestore | .exists() returns true or false boolean
     console.log(userSnapShot.exists())
 
     //if user does not exist, create user
     //create / set the document with the user data from userAuth in my collection
     if (!userSnapShot.exists()) {
-        const { displayName, email } = authUser
-        const createdAt = new Date()
-        try {
-            await setDoc(userDocRef, {
-            displayName,
-            email,
-            createdAt,
-            ...authUser.providerData[0] //providerData is an array of objects | we want the first object in the array
-            })
-        } catch (error) {
-            console.error('error creating user ', error)
-        }
-
-    } 
+      const { displayName, email } = authUser
+      const createdAt = new Date()
+      try {
+        await setDoc(userDocRef, {
+          displayName,
+          email,
+          createdAt,
+          ...additionalInformation //providerData is an array of objects | we want the first object in the array
+        })
+      } catch (error) {
+        console.error('error creating user ', error)
+      }
+    }
 
     //if user does exist, return user doc ref
     return getDoc(userDocRef)
+  }
+}
 
+export const createNewUserEmailPassword = async (email, password) => {
+  if (!email || !password) {
+    return
+  }
+
+  return await createUserWithEmailAndPassword(auth, email, password)
 }
